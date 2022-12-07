@@ -1,0 +1,254 @@
+*,
+*::after,
+*::before {
+  margin: 0;
+  padding: 0;
+}
+
+input {
+  border: none;
+  outline: none;
+}
+
+.head {
+  margin: 2% 10%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo {
+  width: 300px;
+  margin-bottom: 1%;
+}
+
+.search_bar_form {
+  width: 100%;
+  position: relative;
+}
+
+.search_bar_input {
+  width: 100%;
+  height: 60px;
+  background-color: #f0f0f0;
+  padding: 20px;
+  border: none;
+  border-radius: 10px;
+}
+
+.search_bar_form ::placeholder {
+  color: rgb(184, 184, 184);
+}
+
+.search_bar_button {
+  position: absolute;
+  height: 60px;
+  border: none;
+  padding: 0 20px;
+  font-size: 24px;
+  border-radius: 10px;
+  right: 5px;
+}
+
+.tags-section {
+  margin: 0 10%;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.valid-tags-container {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  margin-bottom: 2%;
+  flex-wrap: wrap;
+  row-gap: 10px;
+}
+
+.valid-tag {
+  margin-right: 2%;
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 30px;
+  background-color: lightgray;
+  font-size: 14px;
+}
+
+.tag-name {
+  margin-right: 10px;
+}
+
+.select-wrapper {
+  position: relative;
+  user-select: none;
+  margin-right: 20px;
+}
+
+.select-wrapper-disabled {
+  pointer-events: none;
+}
+
+.select {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 200px;
+}
+
+.form-hidden {
+  display: none;
+}
+
+.span-hidden {
+  display: none;
+}
+
+.select__trigger {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 22px;
+  font-size: 20px;
+  font-weight: 300;
+  color: #3b3b3b;
+  height: 60px;
+  line-height: 60px;
+  background: #ffffff;
+  cursor: pointer;
+}
+
+.custom-options {
+  position: absolute;
+  display: block;
+  top: 100%;
+  margin-left: -2px;
+  border-top: 0;
+  background: #fff;
+  transition: all 0.5s;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  z-index: 2;
+  width: inherit;
+}
+
+.disabled {
+  pointer-events: none;
+  background-color: lightgray;
+}
+
+.custom-option-ingredients,
+.select-ingredients {
+  border: 2px solid rgb(96, 96, 255);
+  width: auto;
+  min-width: 200px;
+  border-radius: 4px;
+}
+
+.custom-option-appareils,
+.select-appareils {
+  border: 2px solid rgb(107, 179, 0);
+  width: auto;
+  min-width: 200px;
+  border-radius: 4px;
+}
+
+.custom-option-ustensils,
+.select-ustensils {
+  border: 2px solid rgb(255, 101, 101);
+  width: auto;
+  min-width: 200px;
+  border-radius: 4px;
+}
+
+.custom-option-ingredients {
+  display: grid;
+  grid-template-columns: repeat(4, 180px);
+  grid-template-rows: repeat(3);
+  align-items: center;
+}
+
+.custom-option-appareils {
+  display: grid;
+  grid-template-columns: repeat(3, 180px);
+  grid-template-rows: repeat(4);
+  align-items: center;
+}
+
+.custom-option-ustensils {
+  display: grid;
+  grid-template-columns: repeat(3, 180px);
+  grid-template-rows: repeat(6);
+  align-items: center;
+}
+
+.select.open .custom-options {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: all;
+}
+
+.custom-option {
+  position: relative;
+  display: block;
+  padding: 11px 22px 11px 22px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #3b3b3b;
+  line-height: 20px;
+  cursor: pointer;
+  transition: all 0.5s;
+}
+
+.custom-option:hover {
+  cursor: pointer;
+  background-color: #b2b2b2;
+}
+
+.custom-option.selected {
+  color: #ffffff;
+  background-color: gray;
+}
+
+.arrow {
+  position: relative;
+  height: 15px;
+  width: 15px;
+  margin-left: 15px;
+}
+
+.arrow::before,
+.arrow::after {
+  content: "";
+  position: absolute;
+  bottom: 0px;
+  width: 0.15rem;
+  height: 100%;
+  transition: all 0.5s;
+}
+
+.arrow::before {
+  left: -5px;
+  transform: rotate(45deg);
+  background-color: #394a6d;
+}
+
+.arrow::after {
+  left: 5px;
+  transform: rotate(-45deg);
+  background-color: #394a6d;
+}
+
+.open .arrow::before {
+  left: -5px;
+  transform: rotate(-45deg);
+}
+
+.open .arrow::after {
+  left: 5px;
+  transform: rotate(45deg);
+}
