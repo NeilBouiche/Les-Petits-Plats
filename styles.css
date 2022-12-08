@@ -252,3 +252,66 @@ input {
   left: 5px;
   transform: rotate(45deg);
 }
+
+.cards-container {
+  margin: 5% 10%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  width: 32%;
+  height: 27rem !important;
+  margin-bottom: 3%;
+  background-color: #e9e9e9 !important;
+}
+
+.card-img {
+  width: 100%;
+  height: 200px;
+  min-height: 200px;
+  background-color: #c9bdbd;
+  border-radius: 0 !important;
+}
+
+.card-time-box {
+  display: flex;
+  align-items: baseline;
+}
+
+.card-timer {
+  margin-left: 5px;
+}
+
+.card-head {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: 3% 5% 0 5%;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.card-instructions {
+  padding: 3% 5%;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.card-ingredients p {
+  margin: 1px;
+  font-size: 14px;
+  width: 100%;
+  font-weight: 600;
+}
+
+.card-steps {
+  line-height: 20px;
+  font-size: 14px;
+  width: 50%;
+}

@@ -13,6 +13,7 @@ const customOptionUstensils = document.querySelector(
   ".custom-option-ustensils"
 );
 const validTagsContainer = document.querySelector(".valid-tags-container");
+const cardsContainer = document.querySelector(".cards-container");
 
 //  Tag Population --------------------------
 // Boucle pour assigner tout les ingredients au array et supprimer les doublon qui ont le meme index
@@ -68,10 +69,6 @@ for (const selectWrapper of document.querySelectorAll(".select-wrapper")) {
       this.querySelector(".search-tag-list-form").classList.remove(
         "form-hidden"
       );
-    } else {
-      this.querySelector(".select").classList.remove("open");
-      this.querySelector(".tag-list-name").classList.remove("span-hidden");
-      this.querySelector(".search-tag-list-form").classList.add("form-hidden");
     }
   });
 }
@@ -105,3 +102,53 @@ window.addEventListener("click", function (e) {
     }
   }
 });
+
+// Creation des cards des recettes et leur contenu
+
+for (let i = 0; i < recipes.length; i++) {
+  const card = document.createElement("div");
+  card.classList.add("card");
+  const cardImg = document.createElement("div");
+  cardImg.classList.add("card-img");
+  const cardHead = document.createElement("div");
+  cardHead.classList.add("card-head");
+  const cardTitle = document.createElement("p");
+  cardTitle.classList.add("card-title");
+  cardTitle.innerHTML = recipes[i].name;
+  const cardTimeBox = document.createElement("div");
+  cardTimeBox.classList.add("card-time-box");
+  const cardClock = document.createElement("i");
+  cardClock.classList.add("fa-regular");
+  cardClock.classList.add("fa-clock");
+  const cardTimer = document.createElement("p");
+  cardTimer.classList.add("card-timer");
+  cardTimer.innerHTML = recipes[i].time;
+  const cardInstructions = document.createElement("div");
+  cardInstructions.classList.add("card-instructions");
+  const cardIngredients = document.createElement("div");
+  cardIngredients.classList.add("card-ingredients");
+  recipes[i].ingredients.map((ingredient) => {
+    if (ingredient.quantity) {
+      const ingredientItem = document.createElement("p");
+      ingredientItem.classList.add("ingredient-item");
+      ingredientItem.innerHTML = ingredient.unit
+        ? ingredient.ingredient + ": " + ingredient.quantity + ingredient.unit
+        : ingredient.ingredient + ": " + ingredient.quantity;
+      cardIngredients.appendChild(ingredientItem);
+    } else {
+      const ingredientItem = document.createElement("p");
+      ingredientItem.classList.add("ingredient-item");
+      ingredientItem.innerHTML = ingredient.ingredient;
+      ingredientItem.innerHTML.slice(0, 100) + "...";
+      cardIngredients.appendChild(ingredientItem);
+    }
+  });
+  const cardSteps = document.createElement("p");
+  cardSteps.classList.add("card-steps");
+  cardSteps.innerHTML = recipes[i].description.slice(0, 100) + "...";
+  card.append(cardImg, cardHead, cardInstructions);
+  cardHead.append(cardTitle, cardTimeBox);
+  cardTimeBox.append(cardClock, cardTimer);
+  cardInstructions.append(cardIngredients, cardSteps);
+  cardsContainer.appendChild(card);
+}
