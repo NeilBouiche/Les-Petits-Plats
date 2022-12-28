@@ -1,8 +1,12 @@
 import { recipes } from "/data/recipes.js";
+import { createCards } from "./templates/cards.js";
 // liste des variables a utiliser dans le projet
 let ingredientsList = [];
+let newIngredientsList = [];
 let appareilsList = [];
+let newAppareilsList = [];
 let ustensilsList = [];
+let newUstensilsList = [];
 const customOptionIngredient = document.querySelector(
   ".custom-option-ingredients"
 );
@@ -19,42 +23,36 @@ let foundFinal = [];
 
 //  Tag Population --------------------------
 // Boucle pour assigner tout les ingredients au array et supprimer les doublon qui ont le meme index
-for (let i = 0; i < recipes.length; i++) {
-  ingredientsList.push(recipes[i].ingredients[0].ingredient);
+recipes.map((element) => {
+  ingredientsList.push(
+    element.ingredients.map((ingredient) => ingredient.ingredient)
+  );
+  ingredientsList = ingredientsList.flat();
   ingredientsList = ingredientsList.filter(
     (x, i) => ingredientsList.indexOf(x) === i
   );
-  appareilsList.push(recipes[i].appliance);
+  appareilsList.push(element.appliance);
   appareilsList = appareilsList.filter(
     (x, i) => appareilsList.indexOf(x) === i
   );
-  ustensilsList.push(recipes[i].ustensils[0]);
+  ustensilsList.push(element.ustensils.map((ustensil) => ustensil));
+  ustensilsList = ustensilsList.flat();
   ustensilsList = ustensilsList.filter(
     (x, i) => ustensilsList.indexOf(x) === i
   );
+});
+function tagPopulation(list, location) {
+  list.forEach((item) => {
+    const customItem = document.createElement("span");
+    customItem.classList.add("custom-option");
+    customItem.setAttribute("data-value", item);
+    customItem.innerHTML = item;
+    location.appendChild(customItem);
+  });
 }
-ingredientsList.forEach((ingredient) => {
-  const customIngredient = document.createElement("span");
-  customIngredient.classList.add("custom-option");
-  customIngredient.setAttribute("data-value", ingredient);
-  customIngredient.innerHTML = ingredient;
-  customOptionIngredient.appendChild(customIngredient);
-  console.log(customIngredient);
-});
-appareilsList.forEach((appareil) => {
-  const customAppareil = document.createElement("span");
-  customAppareil.classList.add("custom-option");
-  customAppareil.setAttribute("data-value", appareil);
-  customAppareil.innerHTML = appareil;
-  customOptionAppareils.appendChild(customAppareil);
-});
-ustensilsList.forEach((ustensil) => {
-  const customUstensil = document.createElement("span");
-  customUstensil.classList.add("custom-option");
-  customUstensil.setAttribute("data-value", ustensil);
-  customUstensil.innerHTML = ustensil;
-  customOptionUstensils.appendChild(customUstensil);
-});
+tagPopulation(ingredientsList, customOptionIngredient);
+tagPopulation(appareilsList, customOptionAppareils);
+tagPopulation(ustensilsList, customOptionUstensils);
 // Tags Logic -------------------
 // Ouvrir la tag container et inserer l'input de recherche
 for (const selectWrapper of document.querySelectorAll(".select-wrapper")) {
@@ -68,7 +66,6 @@ for (const selectWrapper of document.querySelectorAll(".select-wrapper")) {
     }
   });
 }
-
 // Creation du validTag au dessus du champs de recherche au click de l'element
 for (const option of document.querySelectorAll(".custom-option")) {
   option.addEventListener("click", function () {
@@ -82,14 +79,13 @@ for (const option of document.querySelectorAll(".custom-option")) {
     validTag.append(tagName, tagClose);
     validTagsContainer.appendChild(validTag);
     option.classList.add("disabled");
-    //Suppression du validTaf au click de la croix
+    //Suppression du validTag au click de la croix
     tagClose.addEventListener("click", () => {
       option.classList.remove("disabled");
       validTagsContainer.removeChild(validTag);
     });
   });
 }
-
 // Ferme la tagList et la boite de recherche si on clique autre part
 window.addEventListener("click", function (e) {
   for (const select of document.querySelectorAll(".select")) {
@@ -98,67 +94,16 @@ window.addEventListener("click", function (e) {
     }
   }
 });
-
 // Creation des cards des recettes et leur contenu
-
-function createCards(data) {
-  for (let i = 0; i < data.length; i++) {
-    const card = document.createElement("div");
-    card.classList.add("card");
-    const cardImg = document.createElement("div");
-    cardImg.classList.add("card-img");
-    const cardHead = document.createElement("div");
-    cardHead.classList.add("card-head");
-    const cardTitle = document.createElement("p");
-    cardTitle.classList.add("card-title");
-    cardTitle.innerHTML = data[i].name;
-    const cardTimeBox = document.createElement("div");
-    cardTimeBox.classList.add("card-time-box");
-    const cardClock = document.createElement("i");
-    cardClock.classList.add("fa-regular");
-    cardClock.classList.add("fa-clock");
-    const cardTimer = document.createElement("p");
-    cardTimer.classList.add("card-timer");
-    cardTimer.innerHTML = data[i].time + "min";
-    const cardInstructions = document.createElement("div");
-    cardInstructions.classList.add("card-instructions");
-    const cardIngredients = document.createElement("div");
-    cardIngredients.classList.add("card-ingredients");
-    data[i].ingredients.map((ingredient) => {
-      if (ingredient.quantity) {
-        const ingredientItem = document.createElement("p");
-        ingredientItem.classList.add("ingredient-item");
-        ingredientItem.innerHTML = ingredient.unit
-          ? ingredient.ingredient + ": " + ingredient.quantity + ingredient.unit
-          : ingredient.ingredient + ": " + ingredient.quantity;
-        cardIngredients.appendChild(ingredientItem);
-      } else {
-        const ingredientItem = document.createElement("p");
-        ingredientItem.classList.add("ingredient-item");
-        ingredientItem.innerHTML = ingredient.ingredient;
-        ingredientItem.innerHTML.slice(0, 100) + "...";
-        cardIngredients.appendChild(ingredientItem);
-      }
-    });
-    const cardSteps = document.createElement("p");
-    cardSteps.classList.add("card-steps");
-    cardSteps.innerHTML = data[i].description.slice(0, 100) + "...";
-    card.append(cardImg, cardHead, cardInstructions);
-    cardHead.append(cardTitle, cardTimeBox);
-    cardTimeBox.append(cardClock, cardTimer);
-    cardInstructions.append(cardIngredients, cardSteps);
-    cardsContainer.appendChild(card);
-  }
-}
 createCards(recipes);
 // Recherche de la barre principale
 mainSearchBar.addEventListener("change", (event) => {
   const mainSearchContent = event.target.value;
   if (mainSearchContent.length >= 3) {
     // Recherche par titre
-    const foundName = recipes
-      .filter((recipe) => recipe.name.includes(mainSearchContent))
-      .filter((recipe) => recipe);
+    const foundName = recipes.filter((recipe) =>
+      recipe.name.includes(mainSearchContent)
+    );
     // Recherche par ingredient
     let foundIngredient = [];
     for (const recipe of recipes) {
@@ -169,26 +114,43 @@ mainSearchBar.addEventListener("change", (event) => {
       }
     }
     // Recherche par description
-    const foundDescription = recipes
-      .filter((recipe) => recipe.description.includes(mainSearchContent))
-      .filter((recipe) => recipe);
-    // Actualisation des recettes affichees
+    const foundDescription = recipes.filter((recipe) =>
+      recipe.description.includes(mainSearchContent)
+    );
+    // Actualisation de la liste des tags
+    customOptionIngredient.innerHTML = "";
+    customOptionAppareils.innerHTML = "";
+    customOptionUstensils.innerHTML = "";
     foundFinal = [...foundName, ...foundIngredient, ...foundDescription];
-    for (let i = 0; i < foundFinal.length; i++) {
-      for (let j = 0; j < foundFinal[i].ingredients.length; j++) {
-        ingredientsList = [];
-        const newIngredientsItem = foundFinal[i].ingredients[j].ingredient;
-        ingredientsList.push(newIngredientsItem);
-        ingredientsList = ingredientsList.filter(
-          (x, i) => ingredientsList.indexOf(x) === i
+    foundFinal.map((element) => {
+      newIngredientsList.push(
+        element.ingredients.map((ingredient) => ingredient.ingredient)
+      );
+      newIngredientsList = newIngredientsList.flat();
+      newIngredientsList = newIngredientsList.filter(
+        (x, i) => newIngredientsList.indexOf(x) === i
+      );
+      newAppareilsList.push(element.appliance);
+      newAppareilsList = newAppareilsList.filter(
+        (x, i) => newAppareilsList.indexOf(x) === i
+      );
+      foundFinal.map((element) => {
+        newUstensilsList.push(element.ustensils.map((ustensil) => ustensil));
+        newUstensilsList = newUstensilsList.flat();
+        newUstensilsList = newUstensilsList.filter(
+          (x, i) => newUstensilsList.indexOf(x) === i
         );
-      }
-      // Essayer de remplacer les elements de la liste par cette nouvelle liste
-      console.log(ingredientsList);
-    }
+      });
+    });
+    // Essayer de remplacer les elements de la liste par cette nouvelle liste
+    tagPopulation(newIngredientsList, customOptionIngredient);
+    tagPopulation(newAppareilsList, customOptionAppareils);
+    tagPopulation(newUstensilsList, customOptionUstensils);
+    // Actualisation des recettes affichees
     cardsContainer.innerHTML = "";
     createCards(foundFinal);
   } else {
     createCards(recipes);
+    tagPopulation(ingredientsList);
   }
 });
