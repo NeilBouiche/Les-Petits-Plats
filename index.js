@@ -1,5 +1,6 @@
 import { recipes } from "/data/recipes.js";
 import { createCards } from "./templates/cards.js";
+import { validTagCreationAndSearch } from "./templates/validTag.js";
 // liste des variables a utiliser dans le projet
 let ingredientsList = [];
 let newIngredientsList = [];
@@ -16,11 +17,12 @@ const customOptionAppareils = document.querySelector(
 const customOptionUstensils = document.querySelector(
   ".custom-option-ustensils"
 );
-const validTagsContainer = document.querySelector(".valid-tags-container");
 const cardsContainer = document.querySelector(".cards-container");
 const mainSearchBar = document.querySelector(".search_bar_input");
+const ingredientSearchBar = document.querySelector(".search_ingredient_input");
+const appareilSearchBar = document.querySelector(".search_appareil_input");
+const ustensilSearchBar = document.querySelector(".search_ustensil_input");
 let foundFinal = [];
-
 //  Tag Population --------------------------
 // Boucle pour assigner tout les ingredients au array et supprimer les doublon qui ont le meme index
 recipes.map((element) => {
@@ -67,25 +69,7 @@ for (const selectWrapper of document.querySelectorAll(".select-wrapper")) {
   });
 }
 // Creation du validTag au dessus du champs de recherche au click de l'element
-for (const option of document.querySelectorAll(".custom-option")) {
-  option.addEventListener("click", function () {
-    const validTag = document.createElement("div");
-    validTag.classList.add("valid-tag");
-    const tagClose = document.createElement("i");
-    tagClose.classList.add("tag-close", "fa-solid", "fa-x");
-    const tagName = document.createElement("span");
-    tagName.classList.add("tag-name");
-    tagName.innerHTML = option.innerHTML;
-    validTag.append(tagName, tagClose);
-    validTagsContainer.appendChild(validTag);
-    option.classList.add("disabled");
-    //Suppression du validTag au click de la croix
-    tagClose.addEventListener("click", () => {
-      option.classList.remove("disabled");
-      validTagsContainer.removeChild(validTag);
-    });
-  });
-}
+validTagCreationAndSearch();
 // Ferme la tagList et la boite de recherche si on clique autre part
 window.addEventListener("click", function (e) {
   for (const select of document.querySelectorAll(".select")) {
@@ -97,45 +81,53 @@ window.addEventListener("click", function (e) {
 // Creation des cards des recettes et leur contenu
 createCards(recipes);
 // Recherche de la barre principale
-mainSearchBar.addEventListener("change", (event) => {
+mainSearchBar.addEventListener("keyup", (event) => {
+  customOptionIngredient.innerHTML = "";
+  customOptionAppareils.innerHTML = "";
+  customOptionUstensils.innerHTML = "";
+  newIngredientsList = [];
+  newAppareilsList = [];
+  newUstensilsList = [];
   const mainSearchContent = event.target.value;
   if (mainSearchContent.length >= 3) {
     // Recherche par titre
     const foundName = recipes.filter((recipe) =>
-      recipe.name.includes(mainSearchContent)
+      recipe.name.toLowerCase().includes(mainSearchContent)
     );
     // Recherche par ingredient
     let foundIngredient = [];
     for (const recipe of recipes) {
       for (const ingredient of recipe.ingredients) {
-        if (ingredient.ingredient.includes(mainSearchContent)) {
+        if (ingredient.ingredient.toLowerCase().includes(mainSearchContent)) {
           foundIngredient.push(recipe);
         }
       }
     }
     // Recherche par description
     const foundDescription = recipes.filter((recipe) =>
-      recipe.description.includes(mainSearchContent)
+      recipe.description.toLowerCase().includes(mainSearchContent)
     );
     // Actualisation de la liste des tags
-    customOptionIngredient.innerHTML = "";
-    customOptionAppareils.innerHTML = "";
-    customOptionUstensils.innerHTML = "";
     foundFinal = [...foundName, ...foundIngredient, ...foundDescription];
+    foundFinal = foundFinal.filter((x, i) => foundFinal.indexOf(x) === i);
     foundFinal.map((element) => {
       newIngredientsList.push(
-        element.ingredients.map((ingredient) => ingredient.ingredient)
+        element.ingredients.map((ingredient) =>
+          ingredient.ingredient.toLowerCase()
+        )
       );
       newIngredientsList = newIngredientsList.flat();
       newIngredientsList = newIngredientsList.filter(
         (x, i) => newIngredientsList.indexOf(x) === i
       );
-      newAppareilsList.push(element.appliance);
+      newAppareilsList.push(element.appliance.toLowerCase());
       newAppareilsList = newAppareilsList.filter(
         (x, i) => newAppareilsList.indexOf(x) === i
       );
       foundFinal.map((element) => {
-        newUstensilsList.push(element.ustensils.map((ustensil) => ustensil));
+        newUstensilsList.push(
+          element.ustensils.map((ustensil) => ustensil.toLowerCase())
+        );
         newUstensilsList = newUstensilsList.flat();
         newUstensilsList = newUstensilsList.filter(
           (x, i) => newUstensilsList.indexOf(x) === i
@@ -146,11 +138,19 @@ mainSearchBar.addEventListener("change", (event) => {
     tagPopulation(newIngredientsList, customOptionIngredient);
     tagPopulation(newAppareilsList, customOptionAppareils);
     tagPopulation(newUstensilsList, customOptionUstensils);
+    validTagCreation();
     // Actualisation des recettes affichees
     cardsContainer.innerHTML = "";
     createCards(foundFinal);
   } else {
+    customOptionIngredient.innerHTML = "";
+    customOptionAppareils.innerHTML = "";
+    customOptionUstensils.innerHTML = "";
+    tagPopulation(ingredientsList, customOptionIngredient);
+    tagPopulation(appareilsList, customOptionAppareils);
+    tagPopulation(ustensilsList, customOptionUstensils);
+    validTagCreation();
+    cardsContainer.innerHTML = "";
     createCards(recipes);
-    tagPopulation(ingredientsList);
   }
 });
