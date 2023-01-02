@@ -138,7 +138,7 @@ mainSearchBar.addEventListener("keyup", (event) => {
     tagPopulation(newIngredientsList, customOptionIngredient);
     tagPopulation(newAppareilsList, customOptionAppareils);
     tagPopulation(newUstensilsList, customOptionUstensils);
-    validTagCreation();
+    validTagCreationAndSearch();
     // Actualisation des recettes affichees
     cardsContainer.innerHTML = "";
     createCards(foundFinal);
@@ -149,7 +149,7 @@ mainSearchBar.addEventListener("keyup", (event) => {
     tagPopulation(ingredientsList, customOptionIngredient);
     tagPopulation(appareilsList, customOptionAppareils);
     tagPopulation(ustensilsList, customOptionUstensils);
-    validTagCreation();
+    validTagCreationAndSearch();
     cardsContainer.innerHTML = "";
     createCards(recipes);
   }
