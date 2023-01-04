@@ -1,5 +1,6 @@
 import { createCards } from "/templates/cards.js";
 import { recipes } from "/data/recipes.js";
+import { tagPopulation } from "../index.js";
 const validTagsContainer = document.querySelector(".valid-tags-container");
 const cardsContainer = document.querySelector(".cards-container");
 const validTagList = {
@@ -10,7 +11,17 @@ const validTagList = {
 let recipeWithIngredient = [];
 let recipeWithAppliance = [];
 let recipeWithUstensil = [];
-export function validTagCreationAndSearch() {
+let recipeWithTags = [];
+const customOptionIngredient = document.querySelector(
+  ".custom-option-ingredients"
+);
+const customOptionAppareils = document.querySelector(
+  ".custom-option-appareils"
+);
+const customOptionUstensils = document.querySelector(
+  ".custom-option-ustensils"
+);
+export function validTagCreationAndSearch(recipeSource) {
   for (const option of document.querySelectorAll(".custom-option")) {
     option.addEventListener("click", function (e) {
       const validTag = document.createElement("div");
@@ -33,12 +44,13 @@ export function validTagCreationAndSearch() {
       let isUstensil = [...option.parentElement.classList].includes(
         "custom-option-ustensils"
       );
-      // Check ingredient
+      // Recherche Ingredient
       if (isIngredient) {
+        validTag.style.border = "2px solid rgb(96, 96, 255)";
         validTagList.listIngredients.push(option.innerHTML);
         console.log(validTagList);
-        // Filter the recipes for each selected ingredient
-        let filteredRecipes = recipes;
+        // Filtre des recettes pour chaque ingredient
+        let filteredRecipes = recipeSource;
         validTagList.listIngredients.forEach((tagIngredient) => {
           filteredRecipes = filteredRecipes.filter((recipe) =>
             recipe.ingredients.find(
@@ -46,50 +58,92 @@ export function validTagCreationAndSearch() {
             )
           );
         });
-        // Update the displayed recipes
+        // Recettes affichees update
         recipeWithIngredient = filteredRecipes;
         console.log(recipeWithIngredient);
         cardsContainer.innerHTML = "";
         createCards(recipeWithIngredient);
       }
-      // Check appliance
+      // Recherche appliance
       if (isAppliance) {
+        validTag.style.border = "2px solid rgb(107, 179, 0)";
         validTagList.listAppliances.push(option.innerHTML);
         console.log(validTagList);
-        // Filter the recipes for each selected appliance
-        let filteredRecipes = recipes;
+        // Filtre des recettes pour chaque appliance
+        let filteredRecipes = recipeSource;
         validTagList.listAppliances.forEach((tagAppliance) => {
           filteredRecipes = filteredRecipes.filter(
             (recipe) => recipe.appliance == tagAppliance
           );
         });
-        // Update the displayed recipes
+        // Recettes affichees update
         recipeWithAppliance = filteredRecipes;
         console.log(recipeWithAppliance);
         cardsContainer.innerHTML = "";
         createCards(recipeWithAppliance);
       }
-      // Check Ustensil
+      // Recherche Ustensil
       if (isUstensil) {
+        validTag.style.border = "2px solid rgb(255, 101, 101)";
         validTagList.listUstensils.push(option.innerHTML);
         console.log(validTagList);
-        // Filter the recipes for each selected ustensil
-        let filteredRecipes = recipes;
+        // Filtre des recettes pour chaque ustensil
+        let filteredRecipes = recipeSource;
         validTagList.listUstensils.forEach((tagUstensil) => {
           filteredRecipes = filteredRecipes.filter((recipe) =>
             recipe.ustensils.includes(tagUstensil)
           );
         });
-        // Update the displayed recipes
+        // Recettes affichees update
         recipeWithUstensil = filteredRecipes;
         console.log(recipeWithUstensil);
         cardsContainer.innerHTML = "";
         createCards(recipeWithUstensil);
       }
-      //!!!!!!!!!!!!!!!!!!!!!!!!!! Suppression du validTag au click de la croix !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      // Suppression du validTag au click de la croix
       tagClose.addEventListener("click", () => {
         option.classList.remove("disabled");
         validTagsContainer.removeChild(validTag);
+        // Remove the tag from the validTagList
+        const tagText = validTag.textContent.trim();
+        if (validTagList.listIngredients.includes(tagText)) {
+          validTagList.listIngredients = validTagList.listIngredients.filter(
+            (ingredient) => ingredient != tagText
+          );
+        } else if (validTagList.listAppliances.includes(tagText)) {
+          validTagList.listAppliances = validTagList.listAppliances.filter(
+            (appliance) => appliance != tagText
+          );
+        } else if (validTagList.listUstensils.includes(tagText)) {
+          validTagList.listUstensils = validTagList.listUstensils.filter(
+            (ustensil) => ustensil != tagText
+          );
+        }
+        console.log(validTagList);
+        // Filtre des recettes pour chaque tags restant
+        let filteredRecipes = recipeSource;
+        validTagList.listIngredients.forEach((tagIngredient) => {
+          filteredRecipes = filteredRecipes.filter((recipe) =>
+            recipe.ingredients.find(
+              (ingredient) => ingredient.ingredient == tagIngredient
+            )
+          );
+        });
+        validTagList.listAppliances.forEach((tagAppliance) => {
+          filteredRecipes = filteredRecipes.filter(
+            (recipe) => recipe.appliance == tagAppliance
+          );
+        });
+        validTagList.listUstensils.forEach((tagUstensil) => {
+          filteredRecipes = filteredRecipes.filter((recipe) =>
+            recipe.ustensils.includes(tagUstensil)
+          );
+        });
+        // Recettes affichees update
+        recipeWithTags = filteredRecipes;
+        console.log(recipeWithTags);
+        cardsContainer.innerHTML = "";
+        createCards(recipeWithTags);
       });
     });
   }

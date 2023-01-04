@@ -43,7 +43,7 @@ recipes.map((element) => {
     (x, i) => ustensilsList.indexOf(x) === i
   );
 });
-function tagPopulation(list, location) {
+export function tagPopulation(list, location) {
   list.forEach((item) => {
     const customItem = document.createElement("span");
     customItem.classList.add("custom-option");
@@ -69,7 +69,7 @@ for (const selectWrapper of document.querySelectorAll(".select-wrapper")) {
   });
 }
 // Creation du validTag au dessus du champs de recherche au click de l'element
-validTagCreationAndSearch();
+validTagCreationAndSearch(recipes);
 // Ferme la tagList et la boite de recherche si on clique autre part
 window.addEventListener("click", function (e) {
   for (const select of document.querySelectorAll(".select")) {
@@ -112,22 +112,18 @@ mainSearchBar.addEventListener("keyup", (event) => {
     foundFinal = foundFinal.filter((x, i) => foundFinal.indexOf(x) === i);
     foundFinal.map((element) => {
       newIngredientsList.push(
-        element.ingredients.map((ingredient) =>
-          ingredient.ingredient.toLowerCase()
-        )
+        element.ingredients.map((ingredient) => ingredient.ingredient)
       );
       newIngredientsList = newIngredientsList.flat();
       newIngredientsList = newIngredientsList.filter(
         (x, i) => newIngredientsList.indexOf(x) === i
       );
-      newAppareilsList.push(element.appliance.toLowerCase());
+      newAppareilsList.push(element.appliance);
       newAppareilsList = newAppareilsList.filter(
         (x, i) => newAppareilsList.indexOf(x) === i
       );
       foundFinal.map((element) => {
-        newUstensilsList.push(
-          element.ustensils.map((ustensil) => ustensil.toLowerCase())
-        );
+        newUstensilsList.push(element.ustensils.map((ustensil) => ustensil));
         newUstensilsList = newUstensilsList.flat();
         newUstensilsList = newUstensilsList.filter(
           (x, i) => newUstensilsList.indexOf(x) === i
@@ -138,7 +134,7 @@ mainSearchBar.addEventListener("keyup", (event) => {
     tagPopulation(newIngredientsList, customOptionIngredient);
     tagPopulation(newAppareilsList, customOptionAppareils);
     tagPopulation(newUstensilsList, customOptionUstensils);
-    validTagCreationAndSearch();
+    validTagCreationAndSearch(foundFinal);
     // Actualisation des recettes affichees
     cardsContainer.innerHTML = "";
     createCards(foundFinal);
@@ -149,7 +145,7 @@ mainSearchBar.addEventListener("keyup", (event) => {
     tagPopulation(ingredientsList, customOptionIngredient);
     tagPopulation(appareilsList, customOptionAppareils);
     tagPopulation(ustensilsList, customOptionUstensils);
-    validTagCreationAndSearch();
+    validTagCreationAndSearch(recipes);
     cardsContainer.innerHTML = "";
     createCards(recipes);
   }
