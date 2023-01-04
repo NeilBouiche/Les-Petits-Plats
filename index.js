@@ -22,6 +22,7 @@ const mainSearchBar = document.querySelector(".search_bar_input");
 const ingredientSearchBar = document.querySelector(".search_ingredient_input");
 const appareilSearchBar = document.querySelector(".search_appareil_input");
 const ustensilSearchBar = document.querySelector(".search_ustensil_input");
+let inputOpen = false;
 let foundFinal = [];
 //  Tag Population --------------------------
 // Boucle pour assigner tout les ingredients au array et supprimer les doublon qui ont le meme index
@@ -43,28 +44,29 @@ recipes.map((element) => {
     (x, i) => ustensilsList.indexOf(x) === i
   );
 });
-export function tagPopulation(list, location) {
+export function tagPopulation(list, location, customClass) {
   list.forEach((item) => {
     const customItem = document.createElement("span");
     customItem.classList.add("custom-option");
+    customItem.classList.add(customClass);
     customItem.setAttribute("data-value", item);
     customItem.innerHTML = item;
     location.appendChild(customItem);
   });
 }
-tagPopulation(ingredientsList, customOptionIngredient);
-tagPopulation(appareilsList, customOptionAppareils);
-tagPopulation(ustensilsList, customOptionUstensils);
+tagPopulation(
+  ingredientsList,
+  customOptionIngredient,
+  "custom-option-ingredient"
+);
+tagPopulation(appareilsList, customOptionAppareils, "custom-option-appareil");
+tagPopulation(ustensilsList, customOptionUstensils, "custom-option-ustensil");
 // Tags Logic -------------------
-// Ouvrir la tag container et inserer l'input de recherche
+// Ouvrir la tag container
 for (const selectWrapper of document.querySelectorAll(".select-wrapper")) {
   selectWrapper.addEventListener("click", function (e) {
     if (e.target !== this) {
       this.querySelector(".select").classList.add("open");
-      this.querySelector(".tag-list-name").classList.add("span-hidden");
-      this.querySelector(".search-tag-list-form").classList.remove(
-        "form-hidden"
-      );
     }
   });
 }
