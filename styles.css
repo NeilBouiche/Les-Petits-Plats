@@ -76,6 +76,10 @@ input {
   font-size: 14px;
 }
 
+.valid-tag:hover {
+  cursor: pointer;
+}
+
 .tag-name {
   margin-right: 10px;
 }

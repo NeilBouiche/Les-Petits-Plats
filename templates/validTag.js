@@ -10,6 +10,9 @@ let recipeWithIngredient = [];
 let recipeWithAppliance = [];
 let recipeWithUstensil = [];
 let recipeWithTags = [];
+let newRecipeWithIngredient = [];
+let newRecipeWithAppliance = [];
+let newRecipeWithUstensil = [];
 const customOptionIngredient = document.querySelector(
   ".custom-option-ingredients"
 );
@@ -19,6 +22,7 @@ const customOptionAppareils = document.querySelector(
 const customOptionUstensils = document.querySelector(
   ".custom-option-ustensils"
 );
+let foundRecipes = [];
 // Recheche dans les champs de tag
 const searchIngredient = document.querySelector(".search_ingredient_input");
 const searchAppliance = document.querySelector(".search_appareil_input");
@@ -100,12 +104,10 @@ export function validTagCreationAndSearch(recipeSource) {
       validTag.append(tagName, tagClose);
       validTagsContainer.appendChild(validTag);
       option.classList.add("disabled");
-      // Recherche par mot cle
       // Recherche Ingredient
       if (isIngredient) {
         validTag.style.border = "2px solid rgb(96, 96, 255)";
         validTagList.listIngredients.push(option.innerHTML);
-        // Filtre des recettes pour chaque ingredient
         let filteredRecipes = recipeSource;
         validTagList.listIngredients.forEach((tagIngredient) => {
           filteredRecipes = filteredRecipes.filter((recipe) =>
@@ -114,7 +116,6 @@ export function validTagCreationAndSearch(recipeSource) {
             )
           );
         });
-        // Recettes affichees update
         recipeWithIngredient = filteredRecipes;
         cardsContainer.innerHTML = "";
         createCards(recipeWithIngredient);
@@ -123,14 +124,12 @@ export function validTagCreationAndSearch(recipeSource) {
       if (isAppliance) {
         validTag.style.border = "2px solid rgb(107, 179, 0)";
         validTagList.listAppliances.push(option.innerHTML);
-        // Filtre des recettes pour chaque appliance
         let filteredRecipes = recipeSource;
         validTagList.listAppliances.forEach((tagAppliance) => {
           filteredRecipes = filteredRecipes.filter(
             (recipe) => recipe.appliance == tagAppliance
           );
         });
-        // Recettes affichees update
         recipeWithAppliance = filteredRecipes;
         cardsContainer.innerHTML = "";
         createCards(recipeWithAppliance);
@@ -139,20 +138,18 @@ export function validTagCreationAndSearch(recipeSource) {
       if (isUstensil) {
         validTag.style.border = "2px solid rgb(255, 101, 101)";
         validTagList.listUstensils.push(option.innerHTML);
-        // Filtre des recettes pour chaque ustensil
         let filteredRecipes = recipeSource;
         validTagList.listUstensils.forEach((tagUstensil) => {
           filteredRecipes = filteredRecipes.filter((recipe) =>
             recipe.ustensils.includes(tagUstensil)
           );
         });
-        // Recettes affichees update
         recipeWithUstensil = filteredRecipes;
         cardsContainer.innerHTML = "";
         createCards(recipeWithUstensil);
       }
-      // Suppression du validTag au click de la croix
-      tagClose.addEventListener("click", () => {
+      // ------------- Suppression du validTag au click de la croix -------------
+      validTag.addEventListener("click", () => {
         option.classList.remove("disabled");
         validTagsContainer.removeChild(validTag);
         // Remove the tag from the validTagList
@@ -170,7 +167,7 @@ export function validTagCreationAndSearch(recipeSource) {
             (ustensil) => ustensil != tagText
           );
         }
-        // Filtre des recettes pour chaque tags restant
+        // Filtre des recettes pour chaque tags restant quand on supprime des tags
         let filteredRecipes = recipeSource;
         validTagList.listIngredients.forEach((tagIngredient) => {
           filteredRecipes = filteredRecipes.filter((recipe) =>
@@ -189,11 +186,50 @@ export function validTagCreationAndSearch(recipeSource) {
             recipe.ustensils.includes(tagUstensil)
           );
         });
-        // Recettes affichees update
         recipeWithTags = filteredRecipes;
         cardsContainer.innerHTML = "";
         createCards(recipeWithTags);
       });
+      // -------------- Croiser les information pour d'actualiser les tags ---------------
+      foundRecipes = [
+        ...recipeWithIngredient,
+        ...recipeWithAppliance,
+        ...recipeWithUstensil,
+      ];
+      console.log(foundRecipes);
+      foundRecipes.map((element) => {
+        newRecipeWithIngredient.push(
+          element.ingredients.map((ingredient) => ingredient.ingredient)
+        );
+        newRecipeWithIngredient = newRecipeWithIngredient.flat();
+        newRecipeWithIngredient = newRecipeWithIngredient.filter(
+          (x, i) => newRecipeWithIngredient.indexOf(x) === i
+        );
+
+        newRecipeWithAppliance.push(element.appliance);
+        newRecipeWithAppliance = newRecipeWithAppliance.filter(
+          (x, i) => newRecipeWithAppliance.indexOf(x) === i
+        );
+        newRecipeWithUstensil.push(
+          element.ustensils.map((ustensil) => ustensil)
+        );
+        newRecipeWithUstensil = newRecipeWithUstensil.flat();
+        newRecipeWithUstensil = newRecipeWithUstensil.filter(
+          (x, i) => newRecipeWithUstensil.indexOf(x) === i
+        );
+      });
+      function updateTagsList() {
+        document
+          .querySelectorAll(".custom-option-ingredient")
+          .forEach((element) => {
+            if (newRecipeWithIngredient.includes(element.textContent)) {
+              element.style.display = "block";
+            } else {
+              element.style.display = "none";
+            }
+          });
+      }
+      updateTagsList();
     });
   }
 }

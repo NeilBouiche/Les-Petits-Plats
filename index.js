@@ -22,7 +22,6 @@ const mainSearchBar = document.querySelector(".search_bar_input");
 const ingredientSearchBar = document.querySelector(".search_ingredient_input");
 const appareilSearchBar = document.querySelector(".search_appareil_input");
 const ustensilSearchBar = document.querySelector(".search_ustensil_input");
-let inputOpen = false;
 let foundFinal = [];
 //  Tag Population --------------------------
 // Boucle pour assigner tout les ingredients au array et supprimer les doublon qui ont le meme index
@@ -132,7 +131,7 @@ mainSearchBar.addEventListener("keyup", (event) => {
         );
       });
     });
-    // Essayer de remplacer les elements de la liste par cette nouvelle liste
+    // Remplacer les elements de la liste par cette nouvelle liste
     tagPopulation(newIngredientsList, customOptionIngredient);
     tagPopulation(newAppareilsList, customOptionAppareils);
     tagPopulation(newUstensilsList, customOptionUstensils);
