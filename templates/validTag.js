@@ -153,7 +153,7 @@ export function validTagCreationAndSearch(recipeSource) {
         option.classList.remove("disabled");
         validTagsContainer.removeChild(validTag);
         // Remove the tag from the validTagList
-        const tagText = validTag.textContent.trim();
+        const tagText = validTag.textContent;
         if (validTagList.listIngredients.includes(tagText)) {
           validTagList.listIngredients = validTagList.listIngredients.filter(
             (ingredient) => ingredient != tagText
@@ -188,41 +188,62 @@ export function validTagCreationAndSearch(recipeSource) {
         });
         recipeWithTags = filteredRecipes;
         cardsContainer.innerHTML = "";
+        foundRecipes = recipeWithTags;
+        updateTagsList();
         createCards(recipeWithTags);
       });
-      // -------------- Croiser les information pour d'actualiser les tags ---------------
+      // -------------- Croiser les informations pour d'actualiser les tags ---------------
       foundRecipes = [
         ...recipeWithIngredient,
         ...recipeWithAppliance,
         ...recipeWithUstensil,
       ];
-      console.log(foundRecipes);
-      foundRecipes.map((element) => {
-        newRecipeWithIngredient.push(
-          element.ingredients.map((ingredient) => ingredient.ingredient)
-        );
-        newRecipeWithIngredient = newRecipeWithIngredient.flat();
-        newRecipeWithIngredient = newRecipeWithIngredient.filter(
-          (x, i) => newRecipeWithIngredient.indexOf(x) === i
-        );
-
-        newRecipeWithAppliance.push(element.appliance);
-        newRecipeWithAppliance = newRecipeWithAppliance.filter(
-          (x, i) => newRecipeWithAppliance.indexOf(x) === i
-        );
-        newRecipeWithUstensil.push(
-          element.ustensils.map((ustensil) => ustensil)
-        );
-        newRecipeWithUstensil = newRecipeWithUstensil.flat();
-        newRecipeWithUstensil = newRecipeWithUstensil.filter(
-          (x, i) => newRecipeWithUstensil.indexOf(x) === i
-        );
-      });
       function updateTagsList() {
+        newRecipeWithIngredient = [];
+        newRecipeWithAppliance = [];
+        newRecipeWithUstensil = [];
+        foundRecipes.map((element) => {
+          newRecipeWithIngredient.push(
+            element.ingredients.map((ingredient) => ingredient.ingredient)
+          );
+          newRecipeWithIngredient = newRecipeWithIngredient.flat();
+          newRecipeWithIngredient = newRecipeWithIngredient.filter(
+            (x, i) => newRecipeWithIngredient.indexOf(x) === i
+          );
+          newRecipeWithAppliance.push(element.appliance);
+          newRecipeWithAppliance = newRecipeWithAppliance.filter(
+            (x, i) => newRecipeWithAppliance.indexOf(x) === i
+          );
+          newRecipeWithUstensil.push(
+            element.ustensils.map((ustensil) => ustensil)
+          );
+          newRecipeWithUstensil = newRecipeWithUstensil.flat();
+          newRecipeWithUstensil = newRecipeWithUstensil.filter(
+            (x, i) => newRecipeWithUstensil.indexOf(x) === i
+          );
+        });
         document
           .querySelectorAll(".custom-option-ingredient")
           .forEach((element) => {
             if (newRecipeWithIngredient.includes(element.textContent)) {
+              element.style.display = "block";
+            } else {
+              element.style.display = "none";
+            }
+          });
+        document
+          .querySelectorAll(".custom-option-appareil")
+          .forEach((element) => {
+            if (newRecipeWithAppliance.includes(element.textContent)) {
+              element.style.display = "block";
+            } else {
+              element.style.display = "none";
+            }
+          });
+        document
+          .querySelectorAll(".custom-option-ustensil")
+          .forEach((element) => {
+            if (newRecipeWithUstensil.includes(element.textContent)) {
               element.style.display = "block";
             } else {
               element.style.display = "none";
