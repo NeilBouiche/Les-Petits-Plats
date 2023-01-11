@@ -264,6 +264,17 @@ input {
   flex-wrap: wrap;
 }
 
+.search-error {
+  margin: 2%;
+  text-align: center;
+  color: red;
+  display: none;
+}
+
+.search-error-display {
+  display: block;
+}
+
 .card {
   display: flex;
   flex-direction: column;
