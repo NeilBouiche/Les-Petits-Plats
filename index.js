@@ -1,7 +1,7 @@
 import { recipes } from "/data/recipes.js";
 import { createCards } from "./templates/cards.js";
 import { validTagCreationAndSearch } from "./templates/validTag.js";
-// liste des letiables a utiliser dans le projet
+// liste des variables a utiliser dans le projet
 let ingredientsList = [];
 let newIngredientsList = [];
 let appareilsList = [];
@@ -43,7 +43,7 @@ recipes.map((element) => {
     (x, i) => ustensilsList.indexOf(x) === i
   );
 });
-function tagPopulation(list, location, customClass) {
+export function tagPopulation(list, location, customClass) {
   list.forEach((item) => {
     const customItem = document.createElement("span");
     customItem.classList.add("custom-option");
@@ -92,34 +92,22 @@ mainSearchBar.addEventListener("keyup", (event) => {
   const mainSearchContent = event.target.value;
   if (mainSearchContent.length >= 3) {
     // Recherche par titre
-    let foundName = [];
-    for (let i = 0; i < recipes.length; i++) {
-      if (recipes[i].name.toLowerCase().indexOf(mainSearchContent) > -1) {
-        foundName.push(recipes[i]);
-      }
-    }
+    const foundName = recipes.filter((recipe) =>
+      recipe.name.toLowerCase().includes(mainSearchContent)
+    );
     // Recherche par ingredient
     let foundIngredient = [];
-    for (let i = 0; i < recipes.length; i++) {
-      for (let j = 0; j < recipes[i].ingredients.length; j++) {
-        if (
-          recipes[i].ingredients[j].ingredient
-            .toLowerCase()
-            .indexOf(mainSearchContent) > -1
-        ) {
-          foundIngredient.push(recipes[i]);
+    for (const recipe of recipes) {
+      for (const ingredient of recipe.ingredients) {
+        if (ingredient.ingredient.toLowerCase().includes(mainSearchContent)) {
+          foundIngredient.push(recipe);
         }
       }
     }
     // Recherche par description
-    let foundDescription = [];
-    for (let i = 0; i < recipes.length; i++) {
-      if (
-        recipes[i].description.toLowerCase().indexOf(mainSearchContent) > -1
-      ) {
-        foundDescription.push(recipes[i]);
-      }
-    }
+    const foundDescription = recipes.filter((recipe) =>
+      recipe.description.toLowerCase().includes(mainSearchContent)
+    );
     // Actualisation de la liste des tags
     foundFinal = [...foundName, ...foundIngredient, ...foundDescription];
     foundFinal = foundFinal.filter((x, i) => foundFinal.indexOf(x) === i);
