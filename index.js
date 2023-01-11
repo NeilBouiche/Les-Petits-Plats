@@ -92,22 +92,34 @@ mainSearchBar.addEventListener("keyup", (event) => {
   const mainSearchContent = event.target.value;
   if (mainSearchContent.length >= 3) {
     // Recherche par titre
-    const foundName = recipes.filter((recipe) =>
-      recipe.name.toLowerCase().includes(mainSearchContent)
-    );
+    let foundName = [];
+    for (let i = 0; i < recipes.length; i++) {
+      if (recipes[i].name.toLowerCase().indexOf(mainSearchContent) > -1) {
+        foundName.push(recipes[i]);
+      }
+    }
     // Recherche par ingredient
     let foundIngredient = [];
-    for (const recipe of recipes) {
-      for (const ingredient of recipe.ingredients) {
-        if (ingredient.ingredient.toLowerCase().includes(mainSearchContent)) {
-          foundIngredient.push(recipe);
+    for (let i = 0; i < recipes.length; i++) {
+      for (let j = 0; j < recipes[i].ingredients.length; j++) {
+        if (
+          recipes[i].ingredients[j].ingredient
+            .toLowerCase()
+            .indexOf(mainSearchContent) > -1
+        ) {
+          foundIngredient.push(recipes[i]);
         }
       }
     }
     // Recherche par description
-    const foundDescription = recipes.filter((recipe) =>
-      recipe.description.toLowerCase().includes(mainSearchContent)
-    );
+    let foundDescription = [];
+    for (let i = 0; i < recipes.length; i++) {
+      if (
+        recipes[i].description.toLowerCase().indexOf(mainSearchContent) > -1
+      ) {
+        foundDescription.push(recipes[i]);
+      }
+    }
     // Actualisation de la liste des tags
     foundFinal = [...foundName, ...foundIngredient, ...foundDescription];
     foundFinal = foundFinal.filter((x, i) => foundFinal.indexOf(x) === i);
