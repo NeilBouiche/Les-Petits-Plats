@@ -93,6 +93,7 @@ export function validTagCreationAndSearch(recipeSource) {
     let isUstensil = [...option.parentElement.classList].includes(
       "custom-option-ustensils"
     );
+    window.filteredRecipes = recipeSource;
     option.addEventListener("click", function () {
       const validTag = document.createElement("div");
       validTag.classList.add("valid-tag");
@@ -108,7 +109,6 @@ export function validTagCreationAndSearch(recipeSource) {
       if (isIngredient) {
         validTag.style.border = "2px solid rgb(96, 96, 255)";
         validTagList.listIngredients.push(option.innerHTML);
-        let filteredRecipes = recipeSource;
         validTagList.listIngredients.forEach((tagIngredient) => {
           filteredRecipes = filteredRecipes.filter((recipe) =>
             recipe.ingredients.find(
@@ -124,7 +124,6 @@ export function validTagCreationAndSearch(recipeSource) {
       if (isAppliance) {
         validTag.style.border = "2px solid rgb(107, 179, 0)";
         validTagList.listAppliances.push(option.innerHTML);
-        let filteredRecipes = recipeSource;
         validTagList.listAppliances.forEach((tagAppliance) => {
           filteredRecipes = filteredRecipes.filter(
             (recipe) => recipe.appliance == tagAppliance
@@ -138,7 +137,6 @@ export function validTagCreationAndSearch(recipeSource) {
       if (isUstensil) {
         validTag.style.border = "2px solid rgb(255, 101, 101)";
         validTagList.listUstensils.push(option.innerHTML);
-        let filteredRecipes = recipeSource;
         validTagList.listUstensils.forEach((tagUstensil) => {
           filteredRecipes = filteredRecipes.filter((recipe) =>
             recipe.ustensils.includes(tagUstensil)
@@ -167,8 +165,8 @@ export function validTagCreationAndSearch(recipeSource) {
             (ustensil) => ustensil != tagText
           );
         }
+        filteredRecipes = recipeSource;
         // Filtre des recettes pour chaque tags restant quand on supprime des tags
-        let filteredRecipes = recipeSource;
         validTagList.listIngredients.forEach((tagIngredient) => {
           filteredRecipes = filteredRecipes.filter((recipe) =>
             recipe.ingredients.find(
@@ -186,6 +184,13 @@ export function validTagCreationAndSearch(recipeSource) {
             recipe.ustensils.includes(tagUstensil)
           );
         });
+        if (
+          validTagList.listIngredients.length === 0 &&
+          validTagList.listAppliances.length === 0 &&
+          validTagList.listUstensils.length === 0
+        ) {
+          filteredRecipes = recipeSource;
+        }
         recipeWithTags = filteredRecipes;
         cardsContainer.innerHTML = "";
         foundRecipes = recipeWithTags;
