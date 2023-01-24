@@ -151,7 +151,7 @@ mainSearchBar.addEventListener("keyup", (event) => {
     // Actualisation des recettes affichees
     cardsContainer.innerHTML = "";
     createCards(foundFinal);
-    if (foundFinal.length === 0) {
+    if (foundFinal.length < 1) {
       document
         .querySelector(".search-error")
         .classList.add("search-error-display");
@@ -165,9 +165,11 @@ mainSearchBar.addEventListener("keyup", (event) => {
     tagPopulation(ustensilsList, customOptionUstensils);
     validTagCreationAndSearch(recipes);
     cardsContainer.innerHTML = "";
+    createCards(recipes);
+  }
+  if (foundFinal.length > 1) {
     document
       .querySelector(".search-error")
       .classList.remove("search-error-display");
-    createCards(recipes);
   }
 });
