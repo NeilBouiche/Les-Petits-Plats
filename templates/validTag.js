@@ -9,20 +9,9 @@ const validTagList = {
 let recipeWithIngredient = [];
 let recipeWithAppliance = [];
 let recipeWithUstensil = [];
-let recipeWithTags = [];
 let newRecipeWithIngredient = [];
 let newRecipeWithAppliance = [];
 let newRecipeWithUstensil = [];
-const customOptionIngredient = document.querySelector(
-  ".custom-option-ingredients"
-);
-const customOptionAppareils = document.querySelector(
-  ".custom-option-appareils"
-);
-const customOptionUstensils = document.querySelector(
-  ".custom-option-ustensils"
-);
-let foundRecipes = [];
 // Recheche dans les champs de tag
 const searchIngredient = document.querySelector(".search_ingredient_input");
 const searchAppliance = document.querySelector(".search_appareil_input");
@@ -191,23 +180,16 @@ export function validTagCreationAndSearch(recipeSource) {
         ) {
           filteredRecipes = recipeSource;
         }
-        recipeWithTags = filteredRecipes;
         cardsContainer.innerHTML = "";
-        foundRecipes = recipeWithTags;
         updateTagsList();
-        createCards(recipeWithTags);
+        createCards(filteredRecipes);
       });
       // -------------- Croiser les informations pour d'actualiser les tags ---------------
-      foundRecipes = [
-        ...recipeWithIngredient,
-        ...recipeWithAppliance,
-        ...recipeWithUstensil,
-      ];
       function updateTagsList() {
         newRecipeWithIngredient = [];
         newRecipeWithAppliance = [];
         newRecipeWithUstensil = [];
-        foundRecipes.map((element) => {
+        filteredRecipes.map((element) => {
           newRecipeWithIngredient.push(
             element.ingredients.map((ingredient) => ingredient.ingredient)
           );
